@@ -11,10 +11,12 @@ dados_ibge['Cod_setor'] = pd.to_numeric(dados_ibge['Cod_setor'], errors='coerce'
 resultado = pd.merge(mapa, dados_ibge, left_on='code_tract', right_on='Cod_setor', how='inner')
 resultado.crs = "EPSG:4326"  # Define o CRS como WGS
 
-# Exibe o gráfico no Streamlit
+
+# Criando o mapa
 st.set_page_config(layout="wide")
 st.header('Mapa de Esgoto a Céu Aberto na Baixada Fluminense')
 st.caption('Fonte - Censo de 2010')
+st.info('O mapa abaixo mostra informações em % sobre esgoto a céu aberto na baixada Fluminense em 2010.')
 st.markdown(
     """
     <style>
@@ -33,7 +35,7 @@ fig = px.choropleth_mapbox(resultado,
                             range_color=(0, resultado['Porc_geral'].max()),
                             mapbox_style="carto-positron",
                             center={"lat": resultado.centroid.y.mean(), "lon": resultado.centroid.x.mean()},
-                            zoom=10,
+                            zoom=9.3,
                             opacity=0.35,
                             labels={'Porc_geral': 'Esgoto a Céu Aberto (%)',
                                     'name_muni': 'Município',
@@ -45,6 +47,8 @@ fig = px.choropleth_mapbox(resultado,
                                         'name_district': True,
                                         'Nome_do_bairro': True,
                                         'Porc_geral': True},
-                                          width=1200,  # Ajuste a largura
+                                          width=1200,  # definindo o tamanho do mapa
                                             height=800)
 st.plotly_chart(fig, use_container_width=True)
+
+st.caption('Elaborado por Christian Basilio')
